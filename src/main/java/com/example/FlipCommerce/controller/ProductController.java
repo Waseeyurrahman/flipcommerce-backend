@@ -41,16 +41,71 @@ public class ProductController {
     }
 
     // get all the products of a category
+    @GetMapping("/get/category/{category}")
+    public ResponseEntity<List<ProductResponseDto>> getAllProductsByCategory(
+            @PathVariable Category category) {
+
+        return new ResponseEntity<>(
+                productService.getAllProductsByCategory(category),
+                HttpStatus.OK
+        );
+    }
 
     // get all the products in a category who have price greater than 500
+    @GetMapping("/get/category/{category}/price-greater-than/{price}")
+    public ResponseEntity<List<ProductResponseDto>> getProductsByCategoryPriceGreaterThan(
+            @PathVariable Category category,
+            @PathVariable int price) {
+
+        return new ResponseEntity<>(
+                productService.getProductsByCategoryPriceGreaterThan(category, price),
+                HttpStatus.OK
+        );
+    }
 
     // get the top 5 cheapest products in a category
+    @GetMapping("/get/category/{category}/cheapest")
+    public ResponseEntity<List<ProductResponseDto>> getTop5CheapestProducts(
+            @PathVariable Category category) {
+
+        return new ResponseEntity<>(
+                productService.getTop5CheapestProducts(category),
+                HttpStatus.OK
+        );
+    }
 
     // get top 5 costliest products in a category
+    @GetMapping("/get/category/{category}/costliest")
+    public ResponseEntity<List<ProductResponseDto>> getTop5CostliestProducts(
+            @PathVariable Category category) {
+
+        return new ResponseEntity<>(
+                productService.getTop5CostliestProducts(category),
+                HttpStatus.OK
+        );
+    }
 
     // get all the products of seller based on emailid
+    @GetMapping("/get/seller")
+    public ResponseEntity<List<ProductResponseDto>> getProductsBySellerEmail(
+            @RequestParam String emailId) {
+
+        return new ResponseEntity<>(
+                productService.getProductsBySellerEmail(emailId),
+                HttpStatus.OK
+        );
+    }
 
     // get all the out of stock products for a particular catgeory
+    @GetMapping("/get/category/{category}/out-of-stock")
+    public ResponseEntity<List<ProductResponseDto>> getOutOfStockProducts(
+            @PathVariable Category category) {
+
+        return new ResponseEntity<>(
+                productService.getOutOfStockProductsByCategory(category),
+                HttpStatus.OK
+        );
+    }
 
     // send an email to the seller of the product if the product is out os stock.
 

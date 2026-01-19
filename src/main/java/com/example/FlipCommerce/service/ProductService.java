@@ -1,6 +1,7 @@
 package com.example.FlipCommerce.service;
 
 import com.example.FlipCommerce.Enum.Category;
+import com.example.FlipCommerce.Enum.ProductStatus;
 import com.example.FlipCommerce.dto.RequestDto.ProductRequestDto;
 import com.example.FlipCommerce.dto.ResponseDto.ProductResponseDto;
 import com.example.FlipCommerce.exception.SellerNotFoundException;
@@ -55,4 +56,47 @@ public class ProductService {
         }
         return productResponseDtos;
     }
+
+    public List<ProductResponseDto> getAllProductsByCategory(Category category) {
+        return productRepository.findByCategory(category)
+                .stream()
+                .map(ProductTransformer::ProducToProductResponseDto)
+                .toList();
+    }
+
+    public List<ProductResponseDto> getProductsByCategoryPriceGreaterThan(Category category, int price) {
+        return productRepository.findByCategoryAndPriceGreaterThan(category, price)
+                .stream()
+                .map(ProductTransformer::ProducToProductResponseDto)
+                .toList();
+    }
+
+    public List<ProductResponseDto> getTop5CheapestProducts(Category category) {
+        return productRepository.findTop5ByCategoryOrderByPriceAsc(category)
+                .stream()
+                .map(ProductTransformer::ProducToProductResponseDto)
+                .toList();
+    }
+
+    public List<ProductResponseDto> getTop5CostliestProducts(Category category) {
+        return productRepository.findTop5ByCategoryOrderByPriceDesc(category)
+                .stream()
+                .map(ProductTransformer::ProducToProductResponseDto)
+                .toList();
+    }
+
+    public List<ProductResponseDto> getProductsBySellerEmail(String emailId) {
+        return productRepository.findBySellerEmailId(emailId)
+                .stream()
+                .map(ProductTransformer::ProducToProductResponseDto)
+                .toList();
+    }
+
+    public List<ProductResponseDto> getOutOfStockProductsByCategory(Category category) {
+        return productRepository.findByCategoryAndProductStatus(category, ProductStatus.OUT_OF_STOCK)
+                .stream()
+                .map(ProductTransformer::ProducToProductResponseDto)
+                .toList();
+    }
 }
+

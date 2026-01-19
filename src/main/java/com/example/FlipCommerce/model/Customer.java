@@ -30,6 +30,9 @@ public class Customer {
     @Column(unique = true,nullable = false)
     String mobNo;
 
+    @Column(nullable = false)
+    int age;
+
     @Enumerated(EnumType.STRING)
     Gender gender;
 

@@ -23,6 +23,9 @@ import java.util.Date;
 public class CartService {
 
     @Autowired
+    EmailService emailService;
+
+    @Autowired
     CartRepository cartRepository;
 
     @Autowired
@@ -81,7 +84,15 @@ public class CartService {
           OrderEntity savedOrder = orderRepository.save(order);
           customer.getOrders().add(savedOrder);
 
-          return OrderTransformer.OrderToOrderResponseDto(savedOrder);
+            emailService.sendEmail(
+                    "wasi49226@gmail.com",
+                    "Cart Checkout Successful",
+                    "Your cart checkout was successful.\nOrder ID: " + savedOrder.getId() +
+                            "\nTotal Amount: ₹" + savedOrder.getTotalValue()
+            );
+
+
+            return OrderTransformer.OrderToOrderResponseDto(savedOrder);
         }
         catch (InsufficientQuantityException e){
             throw e;

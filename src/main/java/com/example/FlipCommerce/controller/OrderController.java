@@ -6,10 +6,9 @@ import com.example.FlipCommerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -31,10 +30,23 @@ public class OrderController {
     }
 
     // get top 5 orders with highest order value
+    @GetMapping("/top5/highest-value")
+    public List<OrderResponseDto> getTop5OrdersByValue(){
+        return orderService.getTop5OrdersByValue();
+    }
+
 
     // all the orders of a particular customer
+    @GetMapping("/customer/{customerId}")
+    public List<OrderResponseDto> getOrdersByCustomer(@PathVariable Integer customerId){
+        return orderService.getOrdersByCustomer(customerId);
+    }
 
     // top 5 orders of a customer based on cost
+    @GetMapping("/customer/{customerId}/top5/value")
+    public List<OrderResponseDto> getTop5OrdersByCustomerCost(@PathVariable Integer customerId) {
+        return orderService.getTop5OrdersByCustomerCost(customerId);
+    }
 
-    // top 5 recently ordered orders of a customer
+
 }

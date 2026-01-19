@@ -19,14 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
 
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     CardRepository cardRepository;
@@ -85,6 +90,14 @@ public class OrderService {
         customer.getOrders().add(savedOrder);
         product.getItems().add(savedOrder.getItems().get(0));
 
+        emailService.sendEmail(
+                "wasi49226@gmail.com",
+                "Order Placed Successfully",
+                "Your order has been placed successfully.\n" +
+                        "Order No: " + savedOrder.getOrderNo() +
+                        "\nTotal Amount: ₹" + savedOrder.getTotalValue()
+        );
+
         // prepare response dto
         return OrderTransformer.OrderToOrderResponseDto(savedOrder);
     }
@@ -128,5 +141,36 @@ public class OrderService {
         }
         cardNo += originalCardNo.substring(originalCardNo.length()-4);
         return cardNo;
+    }
+
+    private OrderResponseDto mapToDto(OrderEntity order) {
+        OrderResponseDto dto = new OrderResponseDto();
+        dto.setOrderNo(order.getOrderNo());
+        dto.setTotalValue(order.getTotalValue());
+        dto.setCardUsed(order.getCardUsed());
+        dto.setOrderDate(order.getOrderDate());
+        dto.setCustomerName(order.getCustomer().getName());
+        return dto;
+    }
+
+    public List<OrderResponseDto> getTop5OrdersByValue() {
+        return orderRepository.findTop5ByOrderByTotalValueDesc()
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<OrderResponseDto> getOrdersByCustomer(Integer customerId) {
+        return orderRepository.findByCustomerId(customerId)
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<OrderResponseDto> getTop5OrdersByCustomerCost(Integer customerId) {
+        return orderRepository.findTop5ByCustomerIdOrderByTotalValueDesc(customerId)
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 }

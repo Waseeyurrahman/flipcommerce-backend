@@ -54,7 +54,7 @@ public class CartController {
     }
 
     // add the functionality of email sending in direct order and checkout cart
-    // kunaljindal995@gmail.com
+    // wasi49226@gmail.com
 
-    // integrate swagger
+
 }
